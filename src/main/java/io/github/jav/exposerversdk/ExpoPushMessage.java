@@ -255,6 +255,13 @@ public class ExpoPushMessage<T> implements JsonSerializable {
     public int hashCode() {
         return Objects.hash(getTo(), getData(), getTitle(), getSubtitle(), getBody(), getSound(), getTtl(), getExpiration(), getPriority(), getBadge(), getChannelId());
     }
+    
+
+    @Override
+    public String toString() {
+        return "ExpoPushMessage [to=" + to + ", data=" + data + ", title=" + title + ", subtitle=" + subtitle + ", body=" + body + ", sound=" + sound + ", ttl="
+                + ttl + ", expiration=" + expiration + ", priority=" + priority + ", badge=" + badge + ", channelId=" + channelId + "]";
+    }
 
     public ExpoPushMessage<T> toChunk(List<String> partialTo) {
         return new ExpoPushMessage<T>(partialTo, this);

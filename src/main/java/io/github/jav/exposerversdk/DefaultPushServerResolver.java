@@ -1,8 +1,10 @@
 package io.github.jav.exposerversdk;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
@@ -18,10 +20,16 @@ public class DefaultPushServerResolver implements PushServerResolver {
         Executors.newCachedThreadPool().submit(() -> {
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             urlConnection.setRequestProperty("Accept", "application/json");
+            urlConnection.setRequestProperty("Content", "utf-8");
             urlConnection.setDoOutput(true);
-
+            try (BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"))) {
+                bw.write(json);
+                bw.flush();
+            }
+            
             try (OutputStream os = urlConnection.getOutputStream()) {
                 byte[] input = finalJson.getBytes("utf-8");
                 os.write(input, 0, input.length);
